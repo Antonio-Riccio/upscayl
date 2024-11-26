@@ -1,4 +1,4 @@
-const ELECTRON_COMMANDS = {
+export const ELECTRON_COMMANDS = {
   SELECT_FILE: "Select a File",
   SELECT_FOLDER: "Select a Folder",
   UPSCAYL: "Upscale the Image",
@@ -28,6 +28,7 @@ const ELECTRON_COMMANDS = {
   PASTE_IMAGE: "Paste Image from clipboard",
   PASTE_IMAGE_SAVE_SUCCESS: "Clipboard Image saved successfully",
   PASTE_IMAGE_SAVE_ERROR: "Clipboard Image save failed",
+  CHECK_PATH_EXISTS: "Check if path exists",
+  CREATE_DIRECTORY: "Create directory",
+  EXPORT_VIDEO_DIALOG: "Show video export dialog",
 } as const;
-
-export { ELECTRON_COMMANDS };

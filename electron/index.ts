@@ -21,6 +21,7 @@ import autoUpdate from "./commands/auto-update";
 import { FEATURE_FLAGS } from "../common/feature-flags";
 import settings from "electron-settings";
 import pasteImage from "./commands/paste-image";
+import { promises as fs } from "fs";
 
 // INITIALIZATION
 log.initialize({ preload: true });
@@ -98,8 +99,28 @@ ipcMain.on(ELECTRON_COMMANDS.DOUBLE_UPSCAYL, doubleUpscayl);
 
 ipcMain.on(ELECTRON_COMMANDS.PASTE_IMAGE, pasteImage);
 
-ipcMain.handle("show-video-export-dialog", async (event, videoPath) => {
-  return videoExport(videoPath);
+ipcMain.handle(ELECTRON_COMMANDS.CHECK_PATH_EXISTS, async (_, path) => {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+});
+
+ipcMain.handle(ELECTRON_COMMANDS.CREATE_DIRECTORY, async (_, path) => {
+  try {
+    await fs.mkdir(path, { recursive: true });
+    return true;
+  } catch (error) {
+    console.error("Error creating directory:", error);
+    throw error;
+  }
+});
+
+ipcMain.handle(ELECTRON_COMMANDS.EXPORT_VIDEO_DIALOG, async (_, payload) => {
+  const { videoPath, folderVideoExportPath } = payload;
+  return videoExport(videoPath, folderVideoExportPath);
 });
 
 if (!FEATURE_FLAGS.APP_STORE_BUILD) {

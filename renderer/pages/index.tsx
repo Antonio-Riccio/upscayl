@@ -60,14 +60,46 @@ const Home = () => {
     validateImagePath(path);
   };
 
-  const autoSetFolderVideo = async (videoPath) => {
+  const autoSetFolderVideo = async (videoPath: any) => {
     resetImagePaths();
     if (videoPath !== null) {
-      logit("🖼 Selected Folder Path: ", videoPath);
-      setBatchFolderPath(videoPath);
-      if (!rememberOutputFolder) {
-        setOutputPath(videoPath);
+      logit("🖼 Auto Set Video Path: ", videoPath);
+
+      // Get directory path and create folder name
+      const dirPath = videoPath.substring(0, videoPath.lastIndexOf("/"));
+      const folderName = "video_frames";
+      let newFolderPath = `${dirPath}/${folderName}`;
+
+      // Check if folder exists and append number if needed
+      let counter = 1;
+      while (
+        await window.electron.invoke(
+          ELECTRON_COMMANDS.CHECK_PATH_EXISTS,
+          newFolderPath,
+        )
+      ) {
+        newFolderPath = `${dirPath}/${folderName}_${counter}`;
+        counter++;
       }
+
+      // Create the folder
+      await window.electron.invoke(
+        ELECTRON_COMMANDS.CREATE_DIRECTORY,
+        newFolderPath,
+      );
+
+      await window.electron.invoke(
+        ELECTRON_COMMANDS.EXPORT_VIDEO_DIALOG,
+        {videoPath: videoPath, folderVideoExportPath: newFolderPath},
+      );
+      
+      setBatchFolderPath(newFolderPath);
+
+      if (!rememberOutputFolder) {
+        setOutputPath(newFolderPath);
+      }
+
+      logit("📁 Created output directory: ", newFolderPath);
     } else {
       logit("🚫 Folder selection cancelled");
       setBatchFolderPath("");

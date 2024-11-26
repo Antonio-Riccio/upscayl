@@ -39,7 +39,7 @@ type MainContentProps = {
   setImagePath: React.Dispatch<React.SetStateAction<string>>;
   validateImagePath: (path: string) => void;
   selectFolderHandler: () => void;
-  autoSetFolderVideo: (filePath) => void;
+  autoSetFolderVideo: (filePath: any) => void;
   selectImageHandler: () => void;
   upscaledImagePath: string;
   batchFolderPath: string;
@@ -157,10 +157,6 @@ const MainContent = ({
         description: filePath,
       });
       autoSetFolderVideo(filePath);
-      window.electron.invoke(
-        "show-video-export-dialog",
-        filePath
-      );
     } else if (
       !type.includes("image") ||
       !VALID_IMAGE_FORMATS.includes(extension.toLowerCase())
