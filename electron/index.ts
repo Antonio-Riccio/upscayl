@@ -1,5 +1,6 @@
 import prepareNext from "electron-next";
 import { autoUpdater } from "electron-updater";
+import { videoExport } from "./commands/video-export";
 import log from "electron-log";
 import { app, ipcMain, protocol } from "electron";
 import { ELECTRON_COMMANDS } from "../common/electron-commands";
@@ -96,6 +97,10 @@ ipcMain.on(ELECTRON_COMMANDS.FOLDER_UPSCAYL, batchUpscayl);
 ipcMain.on(ELECTRON_COMMANDS.DOUBLE_UPSCAYL, doubleUpscayl);
 
 ipcMain.on(ELECTRON_COMMANDS.PASTE_IMAGE, pasteImage);
+
+ipcMain.handle("show-video-export-dialog", () => {
+  return videoExport();
+});
 
 if (!FEATURE_FLAGS.APP_STORE_BUILD) {
   autoUpdater.on("update-downloaded", autoUpdate);

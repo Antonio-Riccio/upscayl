@@ -1,5 +1,6 @@
 "use client";
 import useLogger from "../hooks/use-logger";
+
 import { useState, useMemo, useEffect } from "react";
 import { ELECTRON_COMMANDS } from "@common/electron-commands";
 import { useAtom, useAtomValue } from "jotai";
@@ -15,7 +16,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { sanitizePath } from "@common/sanitize-path";
 import getDirectoryFromPath from "@common/get-directory-from-path";
 import { FEATURE_FLAGS } from "@common/feature-flags";
-import { ImageFormat, VALID_IMAGE_FORMATS } from "@/lib/valid-formats";
+import {
+  ImageFormat,
+  VideoFormat,
+  VALID_IMAGE_FORMATS,
+  VALID_VIDEO_FORMATS,
+} from "@/lib/valid-formats";
 import ProgressBar from "./progress-bar";
 import InstructionsCard from "./instructions-card";
 import ImageViewSettings from "./image-view-settings";
@@ -140,6 +146,16 @@ const MainContent = ({
     const extension = e.dataTransfer.files[0].name.split(".").at(-1);
     logit("⤵️ Dropped file: ", JSON.stringify({ type, filePath, extension }));
     if (
+      type.includes("video") ||
+      VALID_VIDEO_FORMATS.includes(extension.toLowerCase())
+    ) {
+      logit("OK Video");
+      toast({
+        title: "ok Drop",
+        description: "ok Drop",
+      });
+      window.electron.invoke("show-video-export-dialog");
+    } else if (
       !type.includes("image") ||
       !VALID_IMAGE_FORMATS.includes(extension.toLowerCase())
     ) {
