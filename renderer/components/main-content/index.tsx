@@ -39,6 +39,7 @@ type MainContentProps = {
   setImagePath: React.Dispatch<React.SetStateAction<string>>;
   validateImagePath: (path: string) => void;
   selectFolderHandler: () => void;
+  autoSetFolderVideo: (filePath) => void;
   selectImageHandler: () => void;
   upscaledImagePath: string;
   batchFolderPath: string;
@@ -58,6 +59,7 @@ const MainContent = ({
   setImagePath,
   validateImagePath,
   selectFolderHandler,
+  autoSetFolderVideo,
   selectImageHandler,
   upscaledImagePath,
   batchFolderPath,
@@ -152,9 +154,13 @@ const MainContent = ({
       logit("OK Video");
       toast({
         title: "ok Drop",
-        description: "ok Drop",
+        description: filePath,
       });
-      window.electron.invoke("show-video-export-dialog");
+      autoSetFolderVideo(filePath);
+      window.electron.invoke(
+        "show-video-export-dialog",
+        filePath
+      );
     } else if (
       !type.includes("image") ||
       !VALID_IMAGE_FORMATS.includes(extension.toLowerCase())

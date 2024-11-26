@@ -19,12 +19,14 @@ const selectFile = async () => {
         name: "Images",
         extensions: [
           "mp4",
+          "mov",
           "png",
           "jpg",
           "jpeg",
           "jfif",
           "webp",
           "MP4",
+          "MOV",
           "PNG",
           "JPG",
           "JPEG",
@@ -52,6 +54,7 @@ const selectFile = async () => {
       // log.log("Files in Folder: ", file);
       if (
         file.endsWith(".mp4") ||
+        file.endsWith(".mov") ||
         file.endsWith(".png") ||
         file.endsWith(".jpg") ||
         file.endsWith(".jpeg") ||
@@ -59,6 +62,7 @@ const selectFile = async () => {
         file.endsWith(".webp") ||
         file.endsWith(".JPG") ||
         file.endsWith(".MP4") ||
+        file.endsWith(".MOV") ||
         file.endsWith(".PNG") ||
         file.endsWith(".JPEG") ||
         file.endsWith(".JFIF") ||

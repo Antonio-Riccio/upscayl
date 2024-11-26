@@ -98,8 +98,8 @@ ipcMain.on(ELECTRON_COMMANDS.DOUBLE_UPSCAYL, doubleUpscayl);
 
 ipcMain.on(ELECTRON_COMMANDS.PASTE_IMAGE, pasteImage);
 
-ipcMain.handle("show-video-export-dialog", () => {
-  return videoExport();
+ipcMain.handle("show-video-export-dialog", async (event, videoPath) => {
+  return videoExport(videoPath);
 });
 
 if (!FEATURE_FLAGS.APP_STORE_BUILD) {

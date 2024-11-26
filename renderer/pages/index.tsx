@@ -60,6 +60,23 @@ const Home = () => {
     validateImagePath(path);
   };
 
+  const autoSetFolderVideo = async (videoPath) => {
+    resetImagePaths();
+    if (videoPath !== null) {
+      logit("🖼 Selected Folder Path: ", videoPath);
+      setBatchFolderPath(videoPath);
+      if (!rememberOutputFolder) {
+        setOutputPath(videoPath);
+      }
+    } else {
+      logit("🚫 Folder selection cancelled");
+      setBatchFolderPath("");
+      if (!rememberOutputFolder) {
+        setOutputPath("");
+      }
+    }
+  };
+
   const selectFolderHandler = async () => {
     resetImagePaths();
     const path = await window.electron.invoke(ELECTRON_COMMANDS.SELECT_FOLDER);
@@ -304,6 +321,7 @@ const Home = () => {
         setImagePath={setImagePath}
         validateImagePath={validateImagePath}
         selectFolderHandler={selectFolderHandler}
+        autoSetFolderVideo={autoSetFolderVideo}
         selectImageHandler={selectImageHandler}
         batchFolderPath={batchFolderPath}
         upscaledImagePath={upscaledImagePath}
