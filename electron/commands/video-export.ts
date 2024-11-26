@@ -11,6 +11,11 @@ export const videoExport = async (
 ) => {
   console.log("videoExport received:", { videoPath, folderVideoExportPath });
 
+  if (!videoPath || !folderVideoExportPath) {
+    throw new Error(
+      `Invalid parameters: videoPath=${videoPath}, folderVideoExportPath=${folderVideoExportPath}`,
+    );
+  }
   const dialogOpts: MessageBoxOptions = {
     type: "info",
     buttons: ["Export to PNG", "Cancel"],
@@ -37,7 +42,25 @@ export const videoExport = async (
           })
           .on("end", () => {
             logit("Finished extracting frames");
-            resolve(true);
+
+            ffmpeg(videoPath)
+              .outputOptions(["-vn", "-acodec", "copy"])
+              .output(path.join(folderVideoExportPath, "audio.mp3"))
+              .on("start", () => {
+                logit("Started extracting audio");
+              })
+              .on("progress", (progress) => {
+                logit(`Audio Progress: ${progress.percent}%`);
+              })
+              .on("end", () => {
+                logit("Finished extracting audio");
+                resolve({ success: true, folderVideoExportPath });
+              })
+              .on("error", (err) => {
+                logit(`Error extracting audio: ${err.message}`);
+                reject(err);
+              })
+              .run();
           })
           .on("error", (err) => {
             logit(`Error: ${err.message}`);
@@ -46,7 +69,6 @@ export const videoExport = async (
           .run();
       });
 
-      // Ritorna solo i dati necessari dopo che ffmpeg ha finito
       return {
         success: true,
         outputPath: folderVideoExportPath,
