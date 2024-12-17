@@ -53,3 +53,7 @@ main/utils/*.js
 .env
 *.provisionprofile
 flags.ts
+
+
+#VideoMod
+video/
